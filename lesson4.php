@@ -27,22 +27,35 @@ echo "<h3>Содержине корзины:</h3>";
 // функция разбора
 function parse_basket($basket){
 	foreach ($basket as $name => $params) {
-		$discount = discount($name, $params['цена'], $params['количество заказано'], $params['diskont']);
+		$discount = discount($name, $params['цена'], $params['количество заказано'], $params['осталось на складе'], $params['diskont']);
 		
-		echo 'Вы заказали: <strong>'.$name. '</strong> <br> Цена товара: ' .$params['цена']. ' руб'. '<br> Количество: ' .$params['количество заказано']. ' штук' .'<br>Всего на складе: '.$params['осталось на складе']. ' штук'. '<br> Ваша скидка (diskont) : '.$discount['skidka']. '<br>Цена товара со скидкой: ' .$discount['price_one_disckount']. ' руб'. '<br> Стоимость (по наличию): ' .$discount['price-total']. ' руб';
+		echo 'Вы заказали: <strong>'.$name. '</strong> <br> Цена товара: ' .$params['цена']. ' руб'. '<br> Количество: ' .$params['количество заказано']. ' штук' .'<br>Всего на складе: '.$params['осталось на складе']. ' штук'. '<br> Ваша скидка (diskont) : '.$discount['skidka']. '<br>Цена товара со скидкой: ' .$discount['price_one_disckount']. ' руб'. '<br> Стоимость (по наличию на складе): ' .$discount['price-total']. ' руб';
 		echo "<br><br>";
-		// echo '<br> Всего позиций: ' .$name. ' штук';
+		if ($diskont='diskont3') {
+			echo 'Вы заказали 3 или больше велосипедов. Ваша скидка на все велосипеды составляет 30%';
+		}
 	}
+	echo "<br><br>";
 }
 // функция подсчета скидки
-function discount($name, $price, $amount, $diskont){
+function discount($name, $price, $amount, $in_stock, $diskont){
+	// skidka dlya velosipeda esli zakazano 3 stuki i bolshe
+	if ($name='игрушка детская велосипед' && $amount>=3) {
+		// присваиваем скидку для велосипеда
+		$diskont = 'diskont3';
+	}
+	// реальное количество заказываемого товара
+	if ($in_stock<$amount) {
+		$amount = $in_stock;
+	}
 	$skidka = substr($diskont, 7, 2);
 	$price_with_discount_per_item = $price - ($price * ($skidka *10) / 100);
 	$total_price_all_items_width_discount = $amount * $price_with_discount_per_item;
 	return array(
 		'skidka'=>$skidka."0%",
 		'price_one_disckount'=>$price_with_discount_per_item,
-		'price-total'=>$total_price_all_items_width_discount
+		'price-total'=>$total_price_all_items_width_discount,
+		'in_stock'=>$amount // количество которое можно заказать
 		);
 }
 // если не оказалось на складе и общее количество цены, количества.
@@ -51,13 +64,14 @@ function itogo($basket){
 	static $kolichestvo;
 	static $total_price;
 	foreach ($basket as $name => $params) {
+		
 		// вызываем функцию подсчета скидки
-		$discount = discount($name, $params['цена'], $params['количество заказано'], $params['diskont']);
-		// задаем переменные
-		$kol_naimenovaniy = $kol_naimenovaniy + func_num_args();
-		$kolichestvo = $kolichestvo + $params['количество заказано']; 
+		$discount = discount($name, $params['цена'], $params['количество заказано'], $params['осталось на складе'], $params['diskont']);
+		// высчитываем переменные
+		$kol_naimenovaniy += 1;
+		$kolichestvo = $kolichestvo + $discount['in_stock']; 
 		$total_price = $total_price + $discount['price-total'];
-		// uznaem obshee kolichestvo
+		// вывод о нехватке товара на складе
 		if ($params['количество заказано']>$params['осталось на складе']) {
 			echo 'Товар: <strong>' .$name. '</strong>. Вы заказали <strong>'. $params['количество заказано']. ' штук</strong>. Всего на складе: <strong>'  .$params['осталось на складе'].  ' штук</strong> <br>';
 		}		
@@ -66,12 +80,7 @@ function itogo($basket){
 	echo 'Всего наименовний заказано: ' .$kol_naimenovaniy. ' позиции';
 	echo '<br>Общее количество товара: ' .$kolichestvo. ' штук';
 	echo '<br>Общая сумма заказа: ' .$total_price. ' руб';
-	// skidka dlya velosipeda esli zakazano 3 stuki i bolshe
-		if ($name='игрушка детская велосипед' && $params['количество заказано']>=3) {
-			echo '<br><br> Вы заказали: игрушка детская велосипед, 3 штуки или больше. Поздравляю. Скидка  30% на велосипеды.';
-			// присваиваем скидку для велосипеда
-			$discount['skidka'] = 3;
-		}
+	
 }
 // if ($params['осталось на складе']<$params['количество заказано']) {
 // 	echo 'Нужного количества товара не оказалось на складе';
