@@ -61,16 +61,16 @@ function discount($name, $price, $amount, $in_stock, $diskont){
 }
 // если не оказалось на складе и общее количество цены, количества.
 function itogo($basket){
-	static $kol_naimenovaniy;
-	static $kolichestvo;
-	static $total_price;
+	$quantity_of_items = 0;
+	$total_quantity_of_products = 0;
+	$total_price = 0;
 	foreach ($basket as $name => $params) {
 		
 		// вызываем функцию подсчета скидки
 		$discount = discount($name, $params['цена'], $params['количество заказано'], $params['осталось на складе'], $params['diskont']);
 		// высчитываем переменные
-		$kol_naimenovaniy += 1;
-		$kolichestvo = $kolichestvo + $discount['in_stock']; 
+		$quantity_of_items += 1;
+		$total_quantity_of_products = $total_quantity_of_products + $discount['in_stock']; 
 		$total_price = $total_price + $discount['price-total'];
 		// вывод о нехватке товара на складе
 		if ($params['количество заказано']>$params['осталось на складе']) {
@@ -78,8 +78,8 @@ function itogo($basket){
 		}		
 	}
 	echo "<br>";
-	echo 'Всего наименовний заказано: ' .$kol_naimenovaniy. ' позиции';
-	echo '<br>Общее количество товара: ' .$kolichestvo. ' штук';
+	echo 'Всего наименовний заказано: ' .$quantity_of_items. ' позиции';
+	echo '<br>Общее количество товара: ' .$total_quantity_of_products. ' штук';
 	echo '<br>Общая сумма заказа: ' .$total_price. ' руб';
 	
 }
@@ -88,7 +88,7 @@ function itogo($basket){
 // }
 parse_basket($bd); // начало
 echo "\n";
-itogo($bd); // моя функция kolichestvo
+itogo($bd); // моя функция total_quantity_of_products
  ?>
 <!-- </div>	 -->
 <!-- <div style="float:left; margin-left: 40px;  width: 200px; border: 1px solid #333; padding: 10px;"> -->
