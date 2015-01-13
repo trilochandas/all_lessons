@@ -14,8 +14,8 @@ diskont = diskont'.  mt_rand(0, 2).';
     
 [игрушка детская велосипед]
 цена = '.  mt_rand(1, 10).';
-количество заказано = '.  mt_rand(1, 10).';
-осталось на складе = '.  mt_rand(0, 10).';
+количество заказано ='.  mt_rand(1, 10).';
+осталось на складе ='.  mt_rand(0, 10).';
 diskont = diskont'.  mt_rand(0, 2).';
 ';
 $bd=  parse_ini_string($ini_string, true);
@@ -31,7 +31,7 @@ function parse_basket($basket){
 		
 		echo 'Вы заказали: <strong>'.$name. '</strong> <br> Цена товара: ' .$params['цена']. ' руб'. '<br> Количество: ' .$params['количество заказано']. ' штук' .'<br>Всего на складе: '.$params['осталось на складе']. ' штук'. '<br> Ваша скидка (diskont) : '.$discount['skidka']. '<br>Цена товара со скидкой: ' .$discount['price_one_disckount']. ' руб'. '<br> Стоимость (по наличию на складе): ' .$discount['price-total']. ' руб';
 		echo "<br><br>";
-		if ($name = 'игрушка детская велосипед' && $diskont='diskont3') {
+		if ( 'игрушка детская велосипед' == $name&& 30 == $discount['skidka']) {
 			echo 'Вы заказали 3 или больше велосипедов. Ваша скидка на все велосипеды составляет 30% <br>' ;
 		}
 	}
@@ -39,15 +39,16 @@ function parse_basket($basket){
 }
 // функция подсчета скидки
 function discount($name, $price, $amount, $in_stock, $diskont){
-	// skidka dlya velosipeda esli zakazano 3 stuki i bolshe
-	if ($name='игрушка детская велосипед' && $amount>=3) {
-		// присваиваем скидку для велосипеда
-		$diskont = 'diskont3';
-	}
 	// реальное количество заказываемого товара
 	if ($in_stock<$amount) {
 		$amount = $in_stock;
 	}
+	// skidka dlya velosipeda esli zakazano 3 stuki i bolshe
+	if ('игрушка детская велосипед' == $name && $amount>=3) {
+		// присваиваем скидку для велосипеда
+		$diskont = 'diskont3';
+	}
+	
 	$skidka = substr($diskont, 7, 2);
 	$price_with_discount_per_item = $price - ($price * ($skidka *10) / 100);
 	$total_price_all_items_width_discount = $amount * $price_with_discount_per_item;
