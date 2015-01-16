@@ -12,7 +12,7 @@ $news='Четыре новосибирские компании вошли в с
 $news=  explode("\n", $news);
 // проверка наличия параметра в передаче
 function review(){
-	foreach($_GET as $key => $value){}
+	foreach($_POST as $key => $value){}
 	if('id' != $key){
 		header("HTTP/1.0 404 Not Found");
 	}
@@ -21,11 +21,11 @@ review();
 // количество элементов в массиве
 $quantity_news = count($news);
 // проверка на наличие новости
-if ($_GET['id'] <= $quantity_news) {
+if ($_POST['id'] <= $quantity_news) {
 	// вызов функции с одной новостью
 	echo '<h4>Одна новость: </h4>';
 	$one_news="one_news";
-	$one_news($news[$_GET['id']]);
+	$one_news($news[$_POST['id']]);
 } else {
 	// вызов функции со всеми новостями
 	echo '<h4>Все новости: </h4>';
@@ -44,14 +44,12 @@ function one_news($id){
 		echo $id. '<br>';
 }
 
-echo '<br> Метод GET';
-var_dump($_GET);
 echo '<br> Метод POST';
 var_dump($_POST);
 
 ?>
 <form  method="POST">
-	<input name="textinput" type="text">
+	<input name="id" type="text">
 	<input type="submit">
 </form>
 <?php 
