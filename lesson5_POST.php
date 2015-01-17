@@ -15,43 +15,34 @@ function review(){
 	foreach($_POST as $key => $value){}
 	if('id' != $key){
 		header("HTTP/1.0 404 Not Found");
+		include '404.php';
+		echo '<h4>404.php добавлнена в документ c помощью include</h4>';
 	}
 }
 review();
 // количество элементов в массиве
 $quantity_news = count($news);
 // проверка на наличие новости
-if ($_POST['id'] <= $quantity_news) {
-	// вызов функции с одной новостью
+if ($_POST['id'] <= $quantity_news && $_POST['id'] != null) {
+	// вывод одной новости
 	echo '<h4>Одна новость: </h4>';
-	$one_news="one_news";
-	$one_news($news[$_POST['id']]);
-} else {
-	// вызов функции со всеми новостями
+	echo $news[$_POST['id']];
+} else if ($_POST['id'] != null){
+	// вывод всех новостей
 	echo '<h4>Все новости: </h4>';
-	$all_news= "all_news";
-	$all_news($news);
-}
-
-// функция все новости
-function all_news($news){
 	foreach ($news as $value) {
 		echo $value. '<br>';
 	}
 }
-// функция одна новсть
-function one_news($id){
-		echo $id. '<br>';
-}
-
 echo '<br> Метод POST';
-var_dump($_POST);
-
 ?>
+<p>В этой форме есть параметр id</p>
 <form  method="POST">
-	<input name="id" type="text">
+	<input name="id" type="text" value="">
 	<input type="submit">
 </form>
-<?php 
-
- ?>
+<p>В этой форме нету параметра id</p>
+<form  method="POST">
+	<input name="class" type="text">
+	<input type="submit">
+</form>

@@ -10,11 +10,14 @@ $news='Четыре новосибирские компании вошли в с
 «Красный факел» пустит публику на ночные экскурсии за кулисы и по закоулкам столетнего здания
 Звезды телешоу «Голос» Наргиз Закирова и Гела Гуралиа споют в «Маяковском»';
 $news=  explode("\n", $news);
+
 // проверка наличия параметра в передаче
 function review(){
 	foreach($_GET as $key => $value){}
 	if('id' != $key){
-		header("HTTP/1.0 404 Not Found");
+		header('location: /404.php');
+		// header('location: /404.php', true, '404 Not Found');
+		// header($_SERVER["SERVER_PROTOCOL"]." 400 Bad Request ", false);
 	}
 }
 review();
@@ -22,28 +25,15 @@ review();
 $quantity_news = count($news);
 // проверка на наличие новости
 if ($_GET['id'] <= $quantity_news) {
-	// вызов функции с одной новостью
+	// вывод одной новости
 	echo '<h4>Одна новость: </h4>';
-	$one_news="one_news";
-	$one_news($news[$_GET['id']]);
+	echo $news[$_GET['id']];
 } else {
-	// вызов функции со всеми новостями
+	// вывод всех новостей
 	echo '<h4>Все новости: </h4>';
-	$all_news= "all_news";
-	$all_news($news);
-}
-
-// функция все новости
-function all_news($news){
 	foreach ($news as $value) {
 		echo $value. '<br>';
 	}
 }
-// функция одна новсть
-function one_news($id){
-		echo $id. '<br>';
-}
-
 echo '<br> Метод GET';
-var_dump($_GET);
 ?>
