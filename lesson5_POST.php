@@ -10,16 +10,14 @@ $news='Четыре новосибирские компании вошли в с
 «Красный факел» пустит публику на ночные экскурсии за кулисы и по закоулкам столетнего здания
 Звезды телешоу «Голос» Наргиз Закирова и Гела Гуралиа споют в «Маяковском»';
 $news=  explode("\n", $news);
+echo '<br> Метод POST';
 // проверка наличия параметра в передаче
-function review(){
-	foreach($_POST as $key => $value){}
+foreach($_POST as $key => $value){}
 	if('id' != $key){
 		header("HTTP/1.0 404 Not Found");
-		include '404.php';
+		include_once '404.php';
 		echo '<h4>404.php добавлнена в документ c помощью include</h4>';
-	}
 }
-review();
 // количество элементов в массиве
 $quantity_news = count($news);
 // проверка на наличие новости
@@ -34,7 +32,6 @@ if ($_POST['id'] <= $quantity_news && $_POST['id'] != null) {
 		echo $value. '<br>';
 	}
 }
-echo '<br> Метод POST';
 ?>
 <p>В этой форме есть параметр id</p>
 <form  method="POST">

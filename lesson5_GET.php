@@ -10,30 +10,25 @@ $news='Четыре новосибирские компании вошли в с
 «Красный факел» пустит публику на ночные экскурсии за кулисы и по закоулкам столетнего здания
 Звезды телешоу «Голос» Наргиз Закирова и Гела Гуралиа споют в «Маяковском»';
 $news=  explode("\n", $news);
-
-// проверка наличия параметра в передаче
-function review(){
-	foreach($_GET as $key => $value){}
-	if('id' != $key){
-		header('location: /404.php');
-		// header('location: /404.php', true, '404 Not Found');
-		// header($_SERVER["SERVER_PROTOCOL"]." 400 Bad Request ", false);
-	}
-}
-review();
-// количество элементов в массиве
-$quantity_news = count($news);
-// проверка на наличие новости
-if ($_GET['id'] <= $quantity_news) {
-	// вывод одной новости
-	echo '<h4>Одна новость: </h4>';
-	echo $news[$_GET['id']];
-} else {
-	// вывод всех новостей
-	echo '<h4>Все новости: </h4>';
-	foreach ($news as $value) {
-		echo $value. '<br>';
-	}
-}
 echo '<br> Метод GET';
+// проверка наличия параметра в передаче
+	if (isset($_GET['id'])) {
+		// количество элементов в массиве
+		$quantity_news = count($news);
+		if ($_GET['id'] <= $quantity_news){
+			// вывод одной новости
+			echo '<h4>Одна новость: </h4>';
+			echo $news[$_GET['id']];
+		} else if ($_GET['id'] > $quantity_news){
+			// 	// вывод всех новостей
+			echo '<h4>Все новости: </h4>';
+			foreach ($news as $value) {
+				echo $value. '<br>';
+			}
+		}
+	} else {
+		require_once('404.php'); 
+		header("HTTP/1.0 404 Not Found");
+			exit;
+	}
 ?>
