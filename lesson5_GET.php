@@ -12,6 +12,7 @@ $news='Четыре новосибирские компании вошли в с
 $news=  explode("\n", $news);
 echo '<br> Метод GET';
 // проверка наличия параметра в передаче
+var_dump($_GET['id']);
 	if (isset($_GET['id'])) {
 		// количество элементов в массиве
 		$quantity_news = count($news);

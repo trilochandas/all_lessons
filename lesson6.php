@@ -1,5 +1,10 @@
 <?php 
     session_start();
+//     if (isset($_SESSION))
+// {
+//     session_unset();
+//     session_destroy();
+// }
 ?>
 <form  method="POST">
     
@@ -38,20 +43,29 @@
     </div>
 </form>
 <?php 
-    // unset($_SESSION['history']);
     // session_destroy();
+    // unset($_SESSION);
 
     // $num = function(){
     //     $num = $num +1;
     // };
     // var_dump($num);
+
     // присваиваем сессии данные из POST
     $_SESSION['history']['advert' .date("d:m:Y H:i:s")]=$_POST;
-    // print_r($_SESSION);
     // вывод всех объявлений
     foreach ($_SESSION as $key => $value) {
         foreach ($value as $advert_key => $value_advert) {
-            echo $value_advert['title'] .' | '. $value_advert['price'] .' | '. $value_advert['seller_name'] .' | '. '<a href="#">Удалить</a><br>';
+            if (isset($value_advert['title'], $value_advert['price'], $value_advert['seller_name'])) {
+                 echo $value_advert['title'] .' | '. $value_advert['price'] .' | '. $value_advert['seller_name'] .' | '. '<a href="/lesson6.php?del=' .$advert_key. '">Удалить</a><br>';
+            } 
+           
         }
     }
+
+            var_dump($_SESSION['history'][$advert_key]);
+            if (isset($_GET['del'])) {
+                unset($_SESSION['history'][$_GET['del']]);
+            }
+
  ?>
