@@ -15,7 +15,7 @@ echo '<br> Метод POST';
 foreach($_POST as $key => $value){}
 	if('id' != $key){
 		header("HTTP/1.0 404 Not Found");
-		include_once '404.php';
+		require_once '404.php';
 		echo '<h4>404.php добавлнена в документ c помощью include</h4>';
 }
 // количество элементов в массиве

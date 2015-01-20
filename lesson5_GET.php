@@ -30,5 +30,5 @@ echo '<br> Метод GET';
 		require_once('404.php'); 
 		header("HTTP/1.0 404 Not Found");
 			exit;
-	}
+	};
 ?>
