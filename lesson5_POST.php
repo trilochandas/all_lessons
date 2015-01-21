@@ -11,26 +11,30 @@ $news='Четыре новосибирские компании вошли в с
 Звезды телешоу «Голос» Наргиз Закирова и Гела Гуралиа споют в «Маяковском»';
 $news=  explode("\n", $news);
 echo '<br> Метод POST';
-// проверка наличия параметра в передаче
-foreach($_POST as $key => $value){}
-	if('id' != $key){
-		header("HTTP/1.0 404 Not Found");
-		require_once '404.php';
-		echo '<h4>404.php добавлнена в документ c помощью include</h4>';
-}
-// количество элементов в массиве
-$quantity_news = count($news);
-// проверка на наличие новости
-if ($_POST['id'] <= $quantity_news && $_POST['id'] != null) {
-	// вывод одной новости
-	echo '<h4>Одна новость: </h4>';
-	echo $news[$_POST['id']];
-} else if ($_POST['id'] != null){
-	// вывод всех новостей
-	echo '<h4>Все новости: </h4>';
-	foreach ($news as $value) {
-		echo $value. '<br>';
+// проверка на наличие параметра
+if (isset($_POST['id']) && is_numeric($_POST['id'])) {
+	// количество элементов в массиве
+	$quantity_news = count($news);
+	if ($_POST['id'] <= $quantity_news) {
+		// вывод одной новости
+		echo '<h4>Одна новость: </h4>';
+		echo $news[$_POST['id']];
+		} else if($_POST['id'] > $quantity_news) {
+		// вывод всех новостей
+		echo '<h4>Все новости: </h4>';
+		foreach ($news as $value) {
+			echo $value. '<br>';
+		}		
 	}
+// если параметра нет или не цифра
+} else{
+	require_once '404.php';
+		header("HTTP/1.0 404 Not Found");
+		// вывод всех новостей
+		echo '<h4>Все новости: </h4>';
+		foreach ($news as $value) {
+			echo $value. '<br>';
+		}
 }
 ?>
 <p>В этой форме есть параметр id</p>

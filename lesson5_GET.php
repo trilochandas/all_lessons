@@ -12,7 +12,7 @@ $news='Четыре новосибирские компании вошли в с
 $news=  explode("\n", $news);
 echo '<br> Метод GET';
 // проверка наличия параметра в передаче
-	if (isset($_GET['id'])) {
+	if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 		// количество элементов в массиве
 		$quantity_news = count($news);
 		if ($_GET['id'] <= $quantity_news){
@@ -28,6 +28,11 @@ echo '<br> Метод GET';
 		}
 	} else {
 		require_once('404.php'); 
+		// вывод всех новостей
+			echo '<h4>Все новости: </h4>';
+			foreach ($news as $value) {
+				echo $value. '<br>';
+			}
 		header("HTTP/1.0 404 Not Found");
 			exit;
 	};
