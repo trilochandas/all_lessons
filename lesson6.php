@@ -5,6 +5,7 @@
 //     session_unset();
 //     session_destroy();
 // }
+
 // заполнение формы данными из GET
 if (isset($_GET['title'], $_GET['price'], $_GET['seller_name'])){
     $title=$_GET['title'];
@@ -85,9 +86,5 @@ foreach ($_SESSION as $key => $value) {
 if (isset($_GET['del'])) {
     unset($_SESSION['history'][$_GET['del']]);
 }
-
-// if ($_GET==) {
-//     # code...
-// }
 
  ?>
