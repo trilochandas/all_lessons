@@ -5,13 +5,25 @@
 //     session_unset();
 //     session_destroy();
 // }
+// заполнение формы данными из GET
+if (isset($_GET['title'], $_GET['price'], $_GET['seller_name'])){
+    $title=$_GET['title'];
+    $price=$_GET['price'];
+    $seller_name=$_GET['seller_name'];
+    $description=$_GET['description'];
+} else{
+    $title='0';
+    $price='0';
+    $seller_name='0';
+    $description='0';
+}
 ?>
 <form  method="POST">
     
     
 <!--     <div class="form-row-indented"> <label class="form-label-radio"><input type="radio" checked="" value="1" name="private">Частное лицо</label> <label class="form-label-radio"><input type="radio" value="0" name="private">Компания</label> </div> -->
     <div class="form-row"> <label for="fld_seller_name" class="form-label"><b id="your-name">Ваше имя</b></label>
-        <input type="text" maxlength="40" class="form-input-text" value="" name="seller_name" id="fld_seller_name">
+        <input type="text" maxlength="40" class="form-input-text" value="<?php echo $seller_name; ?>" name="seller_name" id="fld_seller_name">
     </div>
    <!--  <div style="display: none;" id="your-manager" class="form-row"> <label for="fld_manager" class="form-label"><b>Контактное лицо</b></label> <input type="text" class="form-input-text" maxlength="40" value="" name="manager" id="fld_manager">
         <em class="f_r_g">&nbsp;&nbsp;необязательно</em>
@@ -31,9 +43,18 @@
             Выберите параметры
         </label> <div class="form-params params" id="filters">
         </div> </div> -->
-    <div id="f_title" class="form-row f_title"> <label for="fld_title" class="form-label">Название объявления</label> <input type="text" maxlength="50" class="form-input-text-long" value="" name="title" id="fld_title"> </div>
-    <div class="form-row"> <label for="fld_description" class="form-label" id="js-description-label">Описание объявления</label> <textarea maxlength="3000" name="description" id="fld_description" class="form-input-textarea"></textarea> </div>
-    <div id="price_rw" class="form-row rl"> <label id="price_lbl" for="fld_price" class="form-label">Цена</label> <input type="text" maxlength="9" class="form-input-text-short" value="" placeholder="0" name="price" id="fld_price">&nbsp;<span id="fld_price_title">руб.</span> <!-- <a class="link_plain grey right_price c-2 icon-link" id="js-price-link" href="/info/pravilnye_ceny?plain"><span>Правильно указывайте цену</span></a> --> </div>
+    <div id="f_title" class="form-row f_title"> 
+        <label for="fld_title" class="form-label">Название объявления</label> 
+        <input type="text" maxlength="50" class="form-input-text-long" value="<?php echo $title; ?>" name="title" id="fld_title"> 
+    </div>
+    <div class="form-row"> 
+        <label for="fld_description" class="form-label" id="js-description-label">Описание объявления</label> 
+        <textarea maxlength="3000" name="description" id="fld_description" class="form-input-textarea"><?php echo $description; ?></textarea> 
+    </div>
+    <div id="price_rw" class="form-row rl"> 
+        <label id="price_lbl" for="fld_price" class="form-label">Цена</label> 
+        <input type="text" maxlength="9" class="form-input-text-short" value="<?php echo $price; ?>" placeholder="0" name="price" id="fld_price">&nbsp;<span id="fld_price_title">руб.</span> <!-- <a class="link_plain grey right_price c-2 icon-link" id="js-price-link" href="/info/pravilnye_ceny?plain"><span>Правильно указывайте цену</span></a> --> 
+    </div>
 
     <!-- <div id="f_images" class="form-row"> <label for="fld_images" class="form-label"><span id="js-photo-label">Фотографии</span><span class="js-photo-count" style="display: none;"></span></label> <input type="file" value="image" id="fld_images" name="image" accept="image/*" class="form-input-file"> <span style="line-height:22px;color: gray; display: none;" id="fld_images_toomuch">Вы добавили максимально возможное количество фотографий</span> <span style="display: none;" id="fld_images_overhead"></span> </div> <div style="display: none; margin-top: 0px;" class="form-row-indented images" id="files">
         <div style="display: none;" id="progress"> <table><tbody><tr><td> <div><div></div></div> </td></tr></tbody></table> </div> </div> -->
@@ -44,7 +65,7 @@
 </form>
 <?php 
 // проверка на наличие параматров в форме
-if (isset($_POST['title'], $_POST['price'], $_POST['seller_name'])){
+if (isset($_POST['title'], $_POST['price'], $_POST['seller_name'], $_POST['description'])){
     // проверка на наличие знаков у параметров формы
     if (empty($_POST['title']) && empty($_POST['price']) &&  empty($_POST['seller_name'])) {
         echo 'Введите все данные<br>';
@@ -57,12 +78,16 @@ echo '<p style="font-size:24px; margin: 5px;">Все объявления:</p>';
 // вывод всех объявлений
 foreach ($_SESSION as $key => $value) {
     foreach ($value as $advert_key => $value_advert) {
-        echo $value_advert['title'] .' | '. $value_advert['price'] .' | '. $value_advert['seller_name'] .' | '. '<a href="/lesson6.php?del=' .$advert_key. '">Удалить</a><br>';
+        echo '<a href="lesson6?title='. $value_advert['title'].'&price='. $value_advert['price'].'&seller_name='. $value_advert['seller_name']. '&description='. $value_advert['description']. '"  >'. $value_advert['title']. '</a>'  .' | '. $value_advert['price'] .' | '. $value_advert['seller_name'] .' | '. '<a href="/lesson6.php?del=' .$advert_key. '">Удалить</a><br>';
     }
 }       
 // проверка массива GET на наличие парметра del на удаление новости
 if (isset($_GET['del'])) {
     unset($_SESSION['history'][$_GET['del']]);
 }
+
+// if ($_GET==) {
+//     # code...
+// }
 
  ?>
