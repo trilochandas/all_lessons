@@ -12,6 +12,7 @@ if (isset($_GET['title'], $_GET['price'], $_GET['seller_name'])){
     $price=$_GET['price'];
     $seller_name=$_GET['seller_name'];
     $description=$_GET['description'];
+    // добавление нулей в форму
 } else{
     $title='0';
     $price='0';
