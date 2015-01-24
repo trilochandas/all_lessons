@@ -65,6 +65,10 @@ if (isset($_GET['title'], $_GET['price'], $_GET['seller_name'])){
     </div>
 </form>
 <?php 
+// проверка массива GET на наличие парметра del на удаление новости
+if (isset($_GET['del'])) {
+    unset($_SESSION['history'][$_GET['del']]);
+}
 // проверка на наличие параматров в форме
 if (isset($_POST['title'], $_POST['price'], $_POST['seller_name'], $_POST['description'])){
     // проверка на наличие знаков у параметров формы
@@ -82,9 +86,5 @@ foreach ($_SESSION as $key => $value) {
         echo '<a href="lesson6?title='. $value_advert['title'].'&price='. $value_advert['price'].'&seller_name='. $value_advert['seller_name']. '&description='. $value_advert['description']. '"  >'. $value_advert['title']. '</a>'  .' | '. $value_advert['price'] .' | '. $value_advert['seller_name'] .' | '. '<a href="/lesson6.php?del=' .$advert_key. '">Удалить</a><br>';
     }
 }       
-// проверка массива GET на наличие парметра del на удаление новости
-if (isset($_GET['del'])) {
-    unset($_SESSION['history'][$_GET['del']]);
-}
 
  ?>
