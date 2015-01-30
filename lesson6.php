@@ -6,6 +6,7 @@
 //     session_destroy();
 // }
 
+
 // заполнение формы данными из GET
 if (isset($_GET['title'], $_GET['price'], $_GET['seller_name'])){
     $title=$_GET['title'];
@@ -77,15 +78,13 @@ if (isset($_POST['title'], $_POST['price'], $_POST['seller_name'], $_POST['descr
         echo 'Введите все данные<br>';
     } else {
         // присваиваем сессии данные из POST
-        $_SESSION['history']['advert' .date("d:m:Y H:i:s")]=$_POST;
+        $_SESSION['history'][]=$_POST;
     }
 }
 echo '<p style="font-size:24px; margin: 5px;">Все объявления:</p>';
 // вывод всех объявлений
-foreach ($_SESSION as $key => $value) {
-    foreach ($value as $advert_key => $value_advert) {
-        echo '<a href="lesson6?title='. $value_advert['title'].'&price='. $value_advert['price'].'&seller_name='. $value_advert['seller_name']. '&description='. $value_advert['description']. '"  >'. $value_advert['title']. '</a>'  .' | '. $value_advert['price'] .' | '. $value_advert['seller_name'] .' | '. '<a href="/lesson6.php?del=' .$advert_key. '">Удалить</a><br>';
-    }
+foreach ($_SESSION['history'] as $key => $value) {
+        echo '<a href="'.$_SERVER["SCRIPT_NAME"].'?title='. $value['title'].'&price='. $value['price'].'&seller_name='. $value['seller_name']. '&description='. $value['description']. '"  >'. $value['title']. '</a>'  .' | '. $value['price'] .' | '. $value['seller_name'] .' | '. '<a href="'.$_SERVER["SCRIPT_NAME"].'?del=' .$key. '">Удалить</a><br>';
 }       
 
  ?>
