@@ -20,7 +20,7 @@ if (isset($_POST['main_form_submit'])){
         // перезапись объявления
         if (isset($_GET['id'])){
             $_SESSION['history'][$_GET['id']] = $_POST;
-            header('Location: ./lesson6.php');
+            header('Location: ./lesson6.php');  
         } else{
         // присваиваем сессии данные из POST
         $_SESSION['history'][]=$_POST;
