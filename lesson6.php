@@ -76,6 +76,19 @@ if (isset($_GET['id'])){
     </div>
     <div class="form-row"> <label id="fld_phone_label" for="fld_phone" class="form-label">Номер телефона</label> <input type="text" class="form-input-text" value="<?php echo $phone; ?>" name="phone" id="fld_phone">
     </div>
+    <?php
+    $citys = array();
+    $citys = array(
+        1 => array ( 'city' => 'Новосибирск', 'indx' => '641780' ),
+        2 => array( 'city' => 'Барабинск', 'indx' => '641490' ),
+        3 => array( 'city' => 'Бердск', 'indx' => '641510' )
+    );
+    echo '<select name="location_id" >';
+    foreach ($citys as $numb => $one_city) {
+            echo '<option' if ($location_id == $one_city['indx'] ) echo 'selected'; '  value="' . $one_city['indx'] . '">' . $one_city['city'] . '</option>';
+    }
+    echo '</select>';
+    ?>
     <div id="f_location_id" class="form-row form-row-required"> 
     <label for="region" class="form-label">Город</label> 
     <select title="Выберите Ваш город" name="location_id" id="region" class="form-input-select">
