@@ -76,49 +76,87 @@ if (isset($_GET['id'])){
     </div>
     <div class="form-row"> <label id="fld_phone_label" for="fld_phone" class="form-label">Номер телефона</label> <input type="text" class="form-input-text" value="<?php echo $phone; ?>" name="phone" id="fld_phone">
     </div>
-    <?php
-    $citys = array();
-    $citys = array(
-        1 => array ( 'city' => 'Новосибирск', 'indx' => '641780' ),
-        2 => array( 'city' => 'Барабинск', 'indx' => '641490' ),
-        3 => array( 'city' => 'Бердск', 'indx' => '641510' )
-    );
-    echo '<select name="location_id" >';
-    foreach ($citys as $numb => $one_city) {
-            echo '<option' if ($location_id == $one_city['indx'] ) echo 'selected'; '  value="' . $one_city['indx'] . '">' . $one_city['city'] . '</option>';
-    }
-    echo '</select>';
-    ?>
+    
     <div id="f_location_id" class="form-row form-row-required"> 
     <label for="region" class="form-label">Город</label> 
-    <select title="Выберите Ваш город" name="location_id" id="region" class="form-input-select">
-            <option selected value="">-- Выберите город --</option>
-            <option class="opt-group" disabled="disabled">-- Города --</option>
-            <option  <?php if ($location_id == 641780 ) echo 'selected'; ?> value="641780">Новосибирск</option>   
-            <option  <?php if ($location_id == 641490 ) echo 'selected'; ?> value="641490">Барабинск</option>   
-            <option  <?php if ($location_id == 641510 ) echo 'selected'; ?> value="641510">Бердск</option>
-    </select> 
+    <?php
+        $citys = array();
+        $citys = array(
+            1 => array ( 'city' => 'Новосибирск', 'indx' => '641780' ),
+            2 => array( 'city' => 'Барабинск', 'indx' => '641490' ),
+            3 => array( 'city' => 'Бердск', 'indx' => '641510' )
+        );
+        echo '<select name="location_id" >';
+        echo '<option selected value="">-- Выберите город --</option>';
+        foreach ($citys as $numb => $one_city) {
+            if ($location_id == $one_city['indx']) {
+                $selected = 'selected ';
+            } else {
+                $selected ="";
+            }
+            echo '<option ' . $selected . ' value="' . $one_city['indx'] . '">' . $one_city['city'] . '</option>';
+        }
+        echo '</select>';
+    ?>
     <div id="f_metro_id"> 
-        <select title="Выберите станцию метро" name="metro_id" > 
-            <option value="">-- Выберите станцию метро --</option>
-            <option <?php if ($metro_id == 2028 ) echo 'selected'; ?> value="2028">Берёзовая роща</option>
-            <option <?php if ($metro_id == 2018 ) echo 'selected'; ?> value="2018">Гагаринская</option>
-            <option <?php if ($metro_id == 2017 ) echo 'selected'; ?> value="2017">Заельцовская</option>
-        </select>
+    <?php
+        $underground = array();
+        $underground = array(
+            1 => array ( 'station' => 'Берёзовая роща', 'indx' => '2028' ),
+            2 => array( 'station' => 'Гагаринская', 'indx' => '2018' ),
+            3 => array( 'station' => 'Заельцовская', 'indx' => '2017' )
+        );
+        echo '<label for="metro_id" class="form-label">Метро</label>'; 
+        echo '<select name="metro_id" > id="metro_id"> ';
+        echo '<option value="">-- Выберите станцию метро --</option>';
+        foreach ($underground as $numb => $one_station) {
+            if ($metro_id == $one_station['indx']) {
+                $selected = 'selected ';
+            } else {
+                $selected ="";
+            }
+            echo '<option ' . $selected . ' value="' . $one_station['indx'] . '">' . $one_station['station'] . '</option>';
+        }
+        echo '</select>';
+    ?>
     </div>
     <div class="form-row"> 
-        <label for="fld_category_id" class="form-label">Категория</label> 
-        <select title="Выберите категорию объявления" name="category_id" > 
-            <option value="">-- Выберите категорию --</option>
-            <optgroup label="Транспорт">
-                <option <?php if ($category_id == 9 ) echo 'selected'; ?>  value="9">Автомобили с пробегом</option>
-                <option <?php if ($category_id == 109 ) echo 'selected'; ?> value="109">Новые автомобили</option>
-            </optgroup>
-            <optgroup label="Недвижимость">
-                <option <?php if ($category_id == 24 ) echo 'selected'; ?> value="24">Квартиры</option>
-                <option <?php if ($category_id == 23 ) echo 'selected'; ?> value="23">Комнаты</option>
-            </optgroup>
-        </select> 
+    <?php
+        $categorys_auto = array();
+        $categorys_auto = array(
+            1 => array ( 'category' => 'Автомобили с пробегом', 'indx' => '9' ),
+            2 => array( 'category' => 'Новые автомобили', 'indx' => '109' )
+        );
+        $categorys_room = array();
+        $categorys_room = array(
+            1 => array( 'category' => 'Комнаты', 'indx' => '23' ),
+            2 => array( 'category' => 'Квартиры', 'indx' => '24' )
+        );
+        echo '<label for="fld_category_id" class="form-label">Категория</label>'; 
+        echo '<select title="Выберите категорию объявления" name="category_id" > ';
+        echo '<option value="">-- Выберите категорию --</option>';
+        echo '<optgroup label="Транспорт">';
+        foreach ($categorys_auto as $numb => $one_category) {
+            if ($category_id == $one_category['indx']) {
+                $selected = 'selected ';
+            } else {
+            $selected ="";
+        }
+        echo '<option ' . $selected . ' value="' . $one_category['indx'] . '">' . $one_category['category'] . '</option>';
+        }
+        echo '</optgroup>';
+        echo '<optgroup label="Недвижимость">';
+         foreach ($categorys_room as $numb => $one_category) {
+            if ($category_id == $one_category['indx']) {
+                $selected = 'selected ';
+            } else {
+            $selected ="";
+        }
+        echo '<option ' . $selected . ' value="' . $one_category['indx'] . '">' . $one_category['category'] . '</option>';
+        }
+        echo '</optgroup>';
+        echo '</select>';
+    ?>
     </div>
     <div id="f_title" class="form-row f_title"> 
         <label for="fld_title" class="form-label">Название объявления</label> 
