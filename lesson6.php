@@ -1,4 +1,22 @@
-<?php 
+<?php
+$citys = array(
+    1 => array ( 'city' => 'Новосибирск',  '641780' ),
+    2 => array( 'city' => 'Барабинск',  '641490' ),
+    3 => array( 'city' => 'Бердск',  '641510' )
+); 
+$underground = array(
+            1 => array ( 'station' => 'Берёзовая роща', '2028' ),
+            2 => array( 'station' => 'Гагаринская', '2018' ),
+            3 => array( 'station' => 'Заельцовская', '2017' )
+        );
+$categorys_auto = array(
+            1 => array ( 'category' => 'Автомобили с пробегом', '9' ),
+            2 => array( 'category' => 'Новые автомобили', '109' )
+        );
+        $categorys_room = array(
+            1 => array( 'category' => 'Комнаты', '23' ),
+            2 => array( 'category' => 'Квартиры', '24' )
+        );
     session_start();
 //     if (isset($_SESSION))
 // {
@@ -80,79 +98,58 @@ if (isset($_GET['id'])){
     <div id="f_location_id" class="form-row form-row-required"> 
     <label for="region" class="form-label">Город</label> 
     <?php
-        $citys = array();
-        $citys = array(
-            1 => array ( 'city' => 'Новосибирск', 'indx' => '641780' ),
-            2 => array( 'city' => 'Барабинск', 'indx' => '641490' ),
-            3 => array( 'city' => 'Бердск', 'indx' => '641510' )
-        );
         echo '<select name="location_id" >';
         echo '<option selected value="">-- Выберите город --</option>';
         foreach ($citys as $numb => $one_city) {
-            if ($location_id == $one_city['indx']) {
+            if ($location_id == $one_city['0']) {
+    var_dump($one_city['0']);
                 $selected = 'selected ';
             } else {
                 $selected ="";
             }
-            echo '<option ' . $selected . ' value="' . $one_city['indx'] . '">' . $one_city['city'] . '</option>';
+            echo '<option ' . $selected . ' value="' . $one_city['0'] . '">' . $one_city['city'] . '</option>';
         }
         echo '</select>';
     ?>
     <div id="f_metro_id"> 
-    <?php
-        $underground = array();
-        $underground = array(
-            1 => array ( 'station' => 'Берёзовая роща', 'indx' => '2028' ),
-            2 => array( 'station' => 'Гагаринская', 'indx' => '2018' ),
-            3 => array( 'station' => 'Заельцовская', 'indx' => '2017' )
-        );
+    <?php 
         echo '<label for="metro_id" class="form-label">Метро</label>'; 
         echo '<select name="metro_id" > id="metro_id"> ';
         echo '<option value="">-- Выберите станцию метро --</option>';
         foreach ($underground as $numb => $one_station) {
-            if ($metro_id == $one_station['indx']) {
+            if ($metro_id == $one_station['0']) {
                 $selected = 'selected ';
             } else {
                 $selected ="";
             }
-            echo '<option ' . $selected . ' value="' . $one_station['indx'] . '">' . $one_station['station'] . '</option>';
+            echo '<option ' . $selected . ' value="' . $one_station['0'] . '">' . $one_station['station'] . '</option>';
         }
         echo '</select>';
     ?>
     </div>
     <div class="form-row"> 
     <?php
-        $categorys_auto = array();
-        $categorys_auto = array(
-            1 => array ( 'category' => 'Автомобили с пробегом', 'indx' => '9' ),
-            2 => array( 'category' => 'Новые автомобили', 'indx' => '109' )
-        );
-        $categorys_room = array();
-        $categorys_room = array(
-            1 => array( 'category' => 'Комнаты', 'indx' => '23' ),
-            2 => array( 'category' => 'Квартиры', 'indx' => '24' )
-        );
         echo '<label for="fld_category_id" class="form-label">Категория</label>'; 
         echo '<select title="Выберите категорию объявления" name="category_id" > ';
         echo '<option value="">-- Выберите категорию --</option>';
         echo '<optgroup label="Транспорт">';
         foreach ($categorys_auto as $numb => $one_category) {
-            if ($category_id == $one_category['indx']) {
+            if ($category_id == $one_category['0']) {
                 $selected = 'selected ';
             } else {
             $selected ="";
         }
-        echo '<option ' . $selected . ' value="' . $one_category['indx'] . '">' . $one_category['category'] . '</option>';
+        echo '<option ' . $selected . ' value="' . $one_category['0'] . '">' . $one_category['category'] . '</option>';
         }
         echo '</optgroup>';
         echo '<optgroup label="Недвижимость">';
          foreach ($categorys_room as $numb => $one_category) {
-            if ($category_id == $one_category['indx']) {
+            if ($category_id == $one_category['0']) {
                 $selected = 'selected ';
             } else {
             $selected ="";
         }
-        echo '<option ' . $selected . ' value="' . $one_category['indx'] . '">' . $one_category['category'] . '</option>';
+        echo '<option ' . $selected . ' value="' . $one_category['0'] . '">' . $one_category['category'] . '</option>';
         }
         echo '</optgroup>';
         echo '</select>';
