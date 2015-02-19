@@ -1,22 +1,23 @@
 <?php
+header('Content-Type: text/html; charset=utf-8');
 $citys = array(
     1 => array ( 'city' => 'Новосибирск',  '641780' ),
     2 => array( 'city' => 'Барабинск',  '641490' ),
     3 => array( 'city' => 'Бердск',  '641510' )
 ); 
 $underground = array(
-            1 => array ( 'station' => 'Берёзовая роща', '2028' ),
-            2 => array( 'station' => 'Гагаринская', '2018' ),
-            3 => array( 'station' => 'Заельцовская', '2017' )
-        );
+    1 => array ( 'station' => 'Берёзовая роща', '2028' ),
+    2 => array( 'station' => 'Гагаринская', '2018' ),
+    3 => array( 'station' => 'Заельцовская', '2017' )
+);
 $categorys_auto = array(
-            1 => array ( 'category' => 'Автомобили с пробегом', '9' ),
-            2 => array( 'category' => 'Новые автомобили', '109' )
-        );
-        $categorys_room = array(
-            1 => array( 'category' => 'Комнаты', '23' ),
-            2 => array( 'category' => 'Квартиры', '24' )
-        );
+    1 => array ( 'category' => 'Автомобили с пробегом', '9' ),
+    2 => array( 'category' => 'Новые автомобили', '109' )
+);
+$categorys_room = array(
+    1 => array( 'category' => 'Комнаты', '23' ),
+    2 => array( 'category' => 'Квартиры', '24' )
+);
     session_start();
 //     if (isset($_SESSION))
 // {
@@ -57,6 +58,7 @@ if (isset($_GET['id'])){
     $location_id=$_SESSION['history'][$id]['location_id'];
     $metro_id=$_SESSION['history'][$id]['metro_id'];
     $category_id=$_SESSION['history'][$id]['category_id'];
+    $private=$_SESSION['history'][$id]['private'];
     if (isset($_SESSION['history'][$id]['allow_mails'])){
         if($_SESSION['history'][$id]['allow_mails'] == 1){
             $allow_mails = 'checked';
@@ -77,10 +79,16 @@ if (isset($_GET['id'])){
     $location_id='';
     $metro_id='';
     $category_id='';
+    $private='';
 }
 ?>
 <form  method="POST">
-<!--     <div class="form-row-indented"> <label class="form-label-radio"><input type="radio" checked="" value="1" name="private">Частное лицо</label> <label class="form-label-radio"><input type="radio" value="0" name="private">Компания</label> </div> -->
+    <div class="form-row-indented"> 
+        <label class="form-label-radio">
+        <input type="radio" <?php if ($private == 1 ) echo 'checked'; ?> value="1" name="private">Частное лицо</label>
+        <label class="form-label-radio">
+        <input type="radio" <?php if ($private == 0 ) echo 'checked'; ?> value="0" name="private">Компания</label>
+    </div>
     <div class="form-row"> <label for="fld_seller_name" class="form-label"><b id="your-name">Ваше имя</b></label>
         <input type="text" maxlength="40" class="form-input-text" value="<?php echo $seller_name; ?>" name="seller_name" id="fld_seller_name">
     </div>
@@ -102,7 +110,6 @@ if (isset($_GET['id'])){
         echo '<option selected value="">-- Выберите город --</option>';
         foreach ($citys as $numb => $one_city) {
             if ($location_id == $one_city['0']) {
-    var_dump($one_city['0']);
                 $selected = 'selected ';
             } else {
                 $selected ="";
