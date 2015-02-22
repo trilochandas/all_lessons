@@ -1,51 +1,77 @@
 <?php 
+header('Content-Type: text/html; charset=utf-8');
+$citys = array(
+    1 => array ( 'city' => 'Новосибирск',  '641780' ),
+    2 => array( 'city' => 'Барабинск',  '641490' ),
+    3 => array( 'city' => 'Бердск',  '641510' )
+); 
+$underground = array(
+    1 => array ( 'station' => 'Берёзовая роща', '2028' ),
+    2 => array( 'station' => 'Гагаринская', '2018' ),
+    3 => array( 'station' => 'Заельцовская', '2017' )
+);
+$categorys_auto = array(
+    1 => array ( 'category' => 'Автомобили с пробегом', '9' ),
+    2 => array( 'category' => 'Новые автомобили', '109' )
+);
+$categorys_room = array(
+    1 => array( 'category' => 'Комнаты', '23' ),
+    2 => array( 'category' => 'Квартиры', '24' )
+);
     session_start();
-    $advert = serialize($_SESSION['history']);
-    setcookie('advert', $advert, time() + 3600*24*7);
-    $advert = unserialize($advert);
-//     if (isset($_SESSION))
-// {
-//     session_unset();
-//     session_destroy();
-// }
+    $advert = array();
 
 // проверка массива GET на наличие парметра del на удаление новости
 if (isset($_GET['del'])) {
-    unset($_SESSION['history'][$_GET['del']]);
-    $advert = serialize($_SESSION['history']);    
+    $current = $_COOKIE['advert'];
+    $current = unserialize($current);
+    unset($current[$_GET['del']]);
+    $current = serialize($current);
+    setcookie('advert', $current, time() + 3600*24*7);
+    header('Location: ' . $_SERVER['PHP_SELF']); 
+    exit;
 }
-// проверка на наличие параматров в форме
+// проверка на наличие параметров в форме
 if (isset($_POST['main_form_submit'])){
     // проверка на наличие знаков у параметров формы
-    if (empty($_POST['title']) && empty($_POST['price']) &&  empty($_POST['seller_name'])&&  empty($_POST['phone'])) {
+    if (empty($_POST['title']) || empty($_POST['price']) ||  empty($_POST['seller_name']) ||  empty($_POST['phone'])) {
         echo '<p style="color:red;">Введите все данные</p>';
-        } else {
+    } else {
         // перезапись объявления
-        if (isset($_GET['id'])){
-            $_SESSION['history'][$_GET['id']] = $_POST;
+        if (isset($_GET['id']) && !empty($_GET['id'])){
+            $current = $_COOKIE['advert'];
+            $current = unserialize($current);
+            $current[$_GET['id']] = $_POST;
+            $current = serialize($current);
+            setcookie('advert', $current, time() + 3600*24*7);
             header('Location: ' . $_SERVER['PHP_SELF']);  
             exit();
-        } else{
-        // присваиваем сессии данные из POST
-        $_SESSION['history'][]=$_POST;
+        } else {
+        // присваиваем данные из POST в COOKIE
+        $advert=$_POST;
+        $current = $_COOKIE['advert'];
+        $current = unserialize($current);
+        $current[] = $advert;
+        $current = serialize($current);
+        setcookie('advert', $current, time() + 3600*24*7);
+        header('Location: ' . $_SERVER['PHP_SELF']);  
+        exit();
         }
     }
 }
+
+
 // заполнение формы данными из GET
-if (isset($_GET['id'])){
+if (isset($_GET['id']) && !empty($_GET['id'])){
     $id = (int) $_GET['id'];
-    $title=$_SESSION['history'][$id]['title'];
-    $price=$_SESSION['history'][$id]['price'];
-    $seller_name=$_SESSION['history'][$id]['seller_name'];
-    $description=$_SESSION['history'][$id]['description'];
-    $email=$_SESSION['history'][$id]['email'];
-    $phone=$_SESSION['history'][$id]['phone'];
-    $location_id=$_SESSION['history'][$id]['location_id'];
-    $metro_id=$_SESSION['history'][$id]['metro_id'];
-    $category_id=$_SESSION['history'][$id]['category_id'];
-    $private=$_SESSION['history'][$id]['private'];
-    if (isset($_SESSION['history'][$id]['allow_mails'])){
-        if($_SESSION['history'][$id]['allow_mails'] == 1){
+    $advert = $_COOKIE['advert'];
+    $advert = unserialize($advert);
+    $advert = $advert[$id];
+    foreach ($advert as $key => $value) {
+     $$key = $value;
+    }
+    if (isset($advert['allow_mails'])){
+        if($advert['allow_mails'] == 1){
             $allow_mails = 'checked';
         }
     }
@@ -54,19 +80,36 @@ if (isset($_GET['id'])){
     }
     // добавление значений для пустой формы
 } else{
-    $title='';
-    $price='';
-    $seller_name='';
-    $description='';
-    $phone='';
-    $email='';
-    $allow_mails='';
-    $location_id='';
-    $metro_id='';
-    $category_id='';
-    $private='';
+    foreach ($advert as $key => $value) {
+     $$key = '';    
+    }
+    // $title='';
+    // $price='';
+    // $seller_name='';
+    // $description='';
+    // $phone='';
+    // $email='';
+    // $allow_mails='';
+    // $location_id='';
+    // $metro_id='';
+    // $category_id='';
+    // $private='';
 }
 ?>
+<style>
+form{width: 500px;}
+input:not([type="radio"]), select, textarea {
+    float: right;
+}
+input{
+    margin: 5px 0;
+}
+.form-row {
+    margin: 10px 0;
+    clear: both;
+}
+
+</style>
 <form  method="POST">
     <div class="form-row-indented"> 
         <label class="form-label-radio"><input type="radio" <?php if ($private == 1 ) echo 'checked'; ?> value="1" name="private">Частное лицо</label> 
@@ -87,34 +130,63 @@ if (isset($_GET['id'])){
     </div>
     <div id="f_location_id" class="form-row form-row-required"> 
     <label for="region" class="form-label">Город</label> 
-    <select title="Выберите Ваш город" name="location_id" id="region" class="form-input-select">
-            <option selected value="">-- Выберите город --</option>
-            <option class="opt-group" disabled="disabled">-- Города --</option>
-            <option  <?php if ($location_id == 641780 ) echo 'selected'; ?> value="641780">Новосибирск</option>   
-            <option  <?php if ($location_id == 641490 ) echo 'selected'; ?> value="641490">Барабинск</option>   
-            <option  <?php if ($location_id == 641510 ) echo 'selected'; ?> value="641510">Бердск</option>
-    </select> 
+    <?php
+        echo '<select name="location_id" >';
+        echo '<option selected value="">-- Выберите город --</option>';
+        foreach ($citys as $numb => $one_city) {
+            if ($location_id == $one_city['0']) {
+                $selected = 'selected ';
+            } else {
+                $selected ="";
+            }
+            echo '<option ' . $selected . ' value="' . $one_city['0'] . '">' . $one_city['city'] . '</option>';
+        }
+        echo '</select>';
+    ?>
     <div id="f_metro_id"> 
-        <select title="Выберите станцию метро" name="metro_id" > 
-            <option value="">-- Выберите станцию метро --</option>
-            <option <?php if ($metro_id == 2028 ) echo 'selected'; ?> value="2028">Берёзовая роща</option>
-            <option <?php if ($metro_id == 2018 ) echo 'selected'; ?> value="2018">Гагаринская</option>
-            <option <?php if ($metro_id == 2017 ) echo 'selected'; ?> value="2017">Заельцовская</option>
-        </select>
+    <br>
+    <?php 
+        echo '<label for="metro_id" class="form-label">Метро</label>'; 
+        echo '<select name="metro_id" > id="metro_id"> ';
+        echo '<option value="">-- Выберите станцию метро --</option>';
+        foreach ($underground as $numb => $one_station) {
+            if ($metro_id == $one_station['0']) {
+                $selected = 'selected ';
+            } else {
+                $selected ="";
+            }
+            echo '<option ' . $selected . ' value="' . $one_station['0'] . '">' . $one_station['station'] . '</option>';
+        }
+        echo '</select>';
+    ?>
     </div>
     <div class="form-row"> 
-        <label for="fld_category_id" class="form-label">Категория</label> 
-        <select title="Выберите категорию объявления" name="category_id" > 
-            <option value="">-- Выберите категорию --</option>
-            <optgroup label="Транспорт">
-                <option <?php if ($category_id == 9 ) echo 'selected'; ?>  value="9">Автомобили с пробегом</option>
-                <option <?php if ($category_id == 109 ) echo 'selected'; ?> value="109">Новые автомобили</option>
-            </optgroup>
-            <optgroup label="Недвижимость">
-                <option <?php if ($category_id == 24 ) echo 'selected'; ?> value="24">Квартиры</option>
-                <option <?php if ($category_id == 23 ) echo 'selected'; ?> value="23">Комнаты</option>
-            </optgroup>
-        </select> 
+    <?php
+        echo '<label for="fld_category_id" class="form-label">Категория</label>'; 
+        echo '<select title="Выберите категорию объявления" name="category_id" > ';
+        echo '<option value="">-- Выберите категорию --</option>';
+        echo '<optgroup label="Транспорт">';
+        foreach ($categorys_auto as $numb => $one_category) {
+            if ($category_id == $one_category['0']) {
+                $selected = 'selected ';
+            } else {
+            $selected ="";
+        }
+        echo '<option ' . $selected . ' value="' . $one_category['0'] . '">' . $one_category['category'] . '</option>';
+        }
+        echo '</optgroup>';
+        echo '<optgroup label="Недвижимость">';
+         foreach ($categorys_room as $numb => $one_category) {
+            if ($category_id == $one_category['0']) {
+                $selected = 'selected ';
+            } else {
+            $selected ="";
+        }
+        echo '<option ' . $selected . ' value="' . $one_category['0'] . '">' . $one_category['category'] . '</option>';
+        }
+        echo '</optgroup>';
+        echo '</select>';
+    ?>
     </div>
     <div id="f_title" class="form-row f_title"> 
         <label for="fld_title" class="form-label">Название объявления</label> 
@@ -130,14 +202,18 @@ if (isset($_GET['id'])){
     </div>
 
     <div class="form-row-indented form-row-submit b-vas-submit" id="js_additem_form_submit">
-        <div class="vas-submit-button pull-left"> <span class="vas-submit-border"></span> <span class="vas-submit-triangle"></span> <input type="submit" value="Далее" id="form_submit" name="main_form_submit" class="vas-submit-input"> </div>
+        <div class="vas-submit-button pull-left"> <span class="vas-submit-border"></span> <span class="vas-submit-triangle"></span> <input type="submit" value="Далее" d="form_submit" name="main_form_submit" class="vas-submit-input"> </div>
     </div>
 </form>
 <?php 
 
 echo '<p style="font-size:24px; margin: 5px;">Все объявления:</p>';
 // вывод всех объявлений
-foreach ($_SESSION['history'] as $key => $value) {
+$advert = $_COOKIE['advert'];
+$advert = unserialize($advert);
+foreach ($advert as $key => $value) {
         echo "<a href='{$_SERVER['SCRIPT_NAME']}?id=$key'>" . $value['title'] . "</a> | <span>" . $value['price'] . "</span> | <span>" . $value['seller_name'] . "</span> | <a href='{$_SERVER["SCRIPT_NAME"]}?del=$key'>Удалить</a><br>";
 }       
+// var_dump($_COOKIE['advert']);
+// var_dump($advert);
 ?>
