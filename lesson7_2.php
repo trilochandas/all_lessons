@@ -18,12 +18,7 @@ $categorys_room = array(
     1 => array( 'category' => 'Комнаты', '23' ),
     2 => array( 'category' => 'Квартиры', '24' )
 );
-    session_start();
-//     if (isset($_SESSION))
-// {
-//     session_unset();
-//     session_destroy();
-// }
+
 // проверка массива GET на наличие парметра del на удаление новости
 if (isset($_GET['del'])) {
     $file_get = file_get_contents('advert.txt');
@@ -88,11 +83,22 @@ if (isset($_GET['id'])){
     }
     // добавление значений для пустой формы
 } else {
-    $current = file_get_contents('advert.txt');
-    $current = unserialize($current);
-    foreach ($current as $key => $value) {
-     $$key = '';    
-    }
+    // $current = file_get_contents('advert.txt');
+    // $current = unserialize($current);
+    // foreach ($current as $key => $value) {
+    //  $$key = '';    
+    // }
+    $title='';
+    $price='';
+    $seller_name='';
+    $description='';
+    $phone='';
+    $email='';
+    $allow_mails='';
+    $private='';
+    $location_id='';
+    $metro_id='';
+    $category_id='';
 }
 // $current = file_get_contents('advert.txt');
 // $current = unserialize($current);
@@ -135,15 +141,8 @@ input{
     <?php
         echo '<select name="location_id" >';
         echo '<option selected value="">-- Выберите город --</option>';
-        foreach ($citys as $numb => $one_city) {
-            if ($location_id == $one_city['0']) {
-    var_dump($one_city['0']);
-                $selected = 'selected ';
-            } else {
-                $selected ="";
-            }
-            echo '<option ' . $selected . ' value="' . $one_city['0'] . '">' . $one_city['city'] . '</option>';
-        }
+        foreach ($citys as $numb => $one_city) 
+            echo '<option ' . $selected . ' value="' . $one_city['0'] . '" ' . ($location_id == $one_city['0']?"secelted":"") .  '>' . $one_city['city'] . '</option>';
         echo '</select>';
     ?>
     <div id="f_metro_id"> 

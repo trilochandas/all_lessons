@@ -80,20 +80,22 @@ if (isset($_GET['id']) && !empty($_GET['id'])){
     }
     // добавление значений для пустой формы
 } else{
-    foreach ($advert as $key => $value) {
-     $$key = '';    
-    }
-    // $title='';
-    // $price='';
-    // $seller_name='';
-    // $description='';
-    // $phone='';
-    // $email='';
-    // $allow_mails='';
-    // $location_id='';
-    // $metro_id='';
-    // $category_id='';
-    // $private='';
+    // $current = file_get_contents('advert.txt');
+    // $current = unserialize($current);
+    // foreach ($current as $key => $value) {
+    //  $$key = '';    
+    // }
+    $title='';
+    $price='';
+    $seller_name='';
+    $description='';
+    $phone='';
+    $email='';
+    $allow_mails='';
+    $private='';
+    $location_id='';
+    $metro_id='';
+    $category_id='';
 }
 ?>
 <style>
