@@ -37,15 +37,15 @@
     </div>
     <div id="f_location_id" class="form-row "> 
     <label for="region" class="form-label">Город</label> 
-        {html_options name=location_id options=$citys   }
+        {html_options name=location_id options=$citys selected=$location_id }
     </div>
     <div id="f_metro_id" class="form-row "> 
         <label for="metro_id" class="form-label">Метро</label>
-        {html_options name=metro_id options=$underground  }
+        {html_options name=metro_id options=$underground selected=$metro_id }
     </div>
     <div class="form-row "> 
-        <label for="metro_id" >Категория</label>
-        {html_options name=category_id options=$categorys  }
+        <label for="category_id" >Категория</label>
+        {html_options name=category_id options=$categorys selected=$category_id }
     </div>
     <div id="f_title" class="form-row f_title"> 
         <label for="fld_title" >Название объявления</label> 
@@ -63,7 +63,7 @@
         <input type="submit" value="Далее" name="main_form_submit" >
     </div>
     </form>
-       <p>{$location_id}</p> 
+       <!-- <p>{$location_id}</p>  -->
     <h2>Все объявления</h2>
     <table>
         <tr>
@@ -77,7 +77,7 @@
             <td><a href="{$smarty.server.SCRIPT_NAME}?id={$k}">{$v.title}</a></td> 
             <td>{$v.price}</td> 
             <td>{$v.seller_name}</td> 
-            <td><a href='{$smarty.server.SCRIPT_NAME}?del={$k}'>Удалить</a></td> 
+            <td><a href="{$smarty.server.SCRIPT_NAME}?del={$k}">Удалить</a></td> 
        </tr>
     {/foreach}
     </table>

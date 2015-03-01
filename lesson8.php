@@ -39,17 +39,25 @@ $categorys['Недвижимость'] = array(
 );
 
 $smarty->assign('citys', $citys);
-// $smarty->assign('selected_city', $citys['selected']);
 $smarty->assign('underground', $underground);
-// $smarty->assign('selected_underground', $underground['selected']);
 $smarty->assign('categorys', $categorys);
-// $smarty->assign('selected_categorys', $categorys['selected']);
 
+if (!file_exists('advert.txt')){
+    fopen('advert.txt', 'w') or die("Unable to open/create file!");
+}
 
 // переменная для работы с файлом
 $current = file_get_contents('advert.txt');
 $current = unserialize($current);
 $smarty->assign('current' ,$current);
+
+$smarty->assign('error', '');
+
+function serialize_putcontent($array){
+    $array = serialize($array);
+    file_put_contents('advert.txt', $array);
+    header('Location: ' . $_SERVER['PHP_SELF']); 
+}
 
 // обработка формы. запись перезапись
 if (isset($_POST['main_form_submit'])){
@@ -60,30 +68,18 @@ if (isset($_POST['main_form_submit'])){
             // перезапись объявления
             if (isset($_GET['id'])){
                 $current[$_GET['id']] = $_POST;
-                $current = serialize($current);
-                file_put_contents('advert.txt', $current);
-                header('Location: ' . $_SERVER['PHP_SELF']); 
-                exit; 
+                serialize_putcontent($current);                
+                // exit; 
            } else {
             //  добавление объявления
-            if ( !is_null(file_get_contents('advert.txt'))) {
                 $advert=$_POST;
-                $current = file_get_contents('advert.txt');
-                $current = unserialize($current);
                 $current[] = $advert;
-                $current = serialize($current);
-                file_put_contents('advert.txt', $current);
-            // если advert.txt пустой
-            } else {
-                // $advert=$_POST;
-                $current = array();
-                $current[] = $advert;
-                $current = serialize($current);
-                file_put_contents('advert.txt', $current); 
-            }
+                serialize_putcontent($current);
+                // exit; 
         }
     }
 }
+
 
 // заполнение формы
 if (isset($_GET['id'])){
@@ -121,7 +117,9 @@ $smarty->assign('seller_name', $seller_name);
 $smarty->assign('email', $email);
 $smarty->assign('allow_mails', $allow_mails);
 $smarty->assign('phone', $phone);
-
+$smarty->assign('location_id', $location_id);
+$smarty->assign('metro_id', $metro_id);
+$smarty->assign('category_id', $category_id);
 $smarty->assign('title', $title);
 $smarty->assign('description', $description);
 $smarty->assign('price', $price);
@@ -130,10 +128,8 @@ $smarty->assign('price', $price);
 //  удаление новости
 if (isset($_GET['del'])) {
     unset($current[$_GET['del']]);
-    $current = serialize($current);
-    file_put_contents('advert.txt', $current);
-    header('Location: ' . $_SERVER['PHP_SELF']); 
-    exit;
+    serialize_putcontent($current);
+    // exit;
 }
 
 $smarty->display('lesson8.tpl');
