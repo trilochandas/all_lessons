@@ -1,13 +1,26 @@
 {literal}
 <style>
-    form{width: 500px;}
-    input:not([type="radio"]), select, textarea {float: right;}
-    input{margin: 5px 0;}
-    .form-row { clear: both;}
-    table{
-        border-collapse: collapse;
-    }
-    td{border: 1px solid; padding: 5px;}
+table{
+    border: 1px;
+    border-collapse: collapse;
+    text-align: center;
+}
+td{
+    border: 1px solid;
+    padding: 10px;
+}
+form{width: 500px;}
+input:not([type="radio"]), select, textarea {
+    float: right;
+}
+input{
+    margin: 3px 0;
+}
+.form-row {
+    margin: 10px 0;
+    clear: both;
+}
+
 </style>
 {/literal}
 
@@ -37,16 +50,16 @@
     </div>
     <div id="f_location_id" class="form-row "> 
     <label for="region" class="form-label">Город</label> 
-        {html_options name=location_id options=$citys selected=$location_id }
+        {html_options name=city options=$citys selected=$city }
     </div>
     <div id="f_metro_id" class="form-row "> 
         <label for="metro_id" class="form-label">Метро</label>
-        {html_options name=metro_id options=$underground selected=$metro_id }
+        {html_options name=metro_all options=$metro1 selected=$metro }
     </div>
-    <div class="form-row "> 
+    <!-- <div class="form-row "> 
         <label for="category_id" >Категория</label>
         {html_options name=category_id options=$categorys selected=$category_id }
-    </div>
+    </div> -->
     <div id="f_title" class="form-row f_title"> 
         <label for="fld_title" >Название объявления</label> 
         <input maxlength="50" value="{$title}" name="title" id="fld_title" type="text"> 
@@ -64,7 +77,6 @@
     </div>
     <br>
     <br>
-    {html_options name=location_id_sql options=$results }
     </form>   
     <h2>Все объявления</h2>
     <table>
@@ -75,14 +87,12 @@
             <td>Удалить</td>
         </tr>
 
-    {foreach from=$current key=k item=v}
+    {foreach from=$advert_output_table key=k item=v}
         <tr>
-            <td><a href="{$smarty.server.SCRIPT_NAME}?id={$k}">{$v.title}</a></td> 
+            <td><a href="{$smarty.server.SCRIPT_NAME}?id={$v.id}">{$v.title}</a></td>
             <td>{$v.price}</td> 
             <td>{$v.seller_name}</td> 
-            <td><a href="{$smarty.server.SCRIPT_NAME}?del={$k}">Удалить</a></td> 
+            <td><a href="{$smarty.server.SCRIPT_NAME}?del={$v.id}">Удалить</a></td> 
        </tr>
     {/foreach}
     </table>
-    {$results|@var_dump}
-
